@@ -1,0 +1,37 @@
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+body {
+  background-image: linear-gradient(
+    to top,
+    #f3e7e9 0%,
+    #e3eeff 99%,
+    #e3eeff 100%
+  );
+}
+
+.alert-danger {
+  white-space: pre-wrap;
+}
+
+.alert-hidden {
+  opacity: 0;
+  transition: all 250ms linear 5s;
+}
+
+.alert-shown {
+  opacity: 1;
+  transition: all 250ms linear;
+}
+
+.thumb {
+  max-height: 20em;
+}
+
+.def {
+  width: 3em;
+  height: 3em;
+}
