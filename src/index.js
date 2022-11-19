@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import { searchPhoto, OCR } from './requests';
+import React, { Fragment, useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
+import { searchPhoto, OCR } from "./requests";
 import {
   Container,
   Row,
@@ -15,19 +15,19 @@ import {
   Card,
   CardBody,
   List,
-} from 'reactstrap';
+} from "reactstrap";
 
 const Main = () => {
-  const [imgURL, setImgURL] = useState('');
+  const [imgURL, setImgURL] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Fragment>
-      <div style={{ width: '100%', textAlign: 'center' }}>
+      <div style={{ width: "100%", textAlign: "center" }}>
         <h2>Jacob Grieninger</h2>
         <h4>MIS480 - 2022 - API Prototype</h4>
       </div>
-      <div style={{ width: '100%', textAlign: 'center' }}>
+      <div style={{ width: "100%", textAlign: "center" }}>
         <Button
           color="secondary"
           outline={true}
@@ -35,21 +35,27 @@ const Main = () => {
           onClick={function () {
             setIsOpen(!isOpen);
           }}
-          style={{ marginBottom: '1rem' }}
+          style={{ marginBottom: "1rem" }}
         >
           About
         </Button>
         <Container>
           <Row>
             <Col />
-            <Col>
+            <Col xs="6">
               <Collapse isOpen={isOpen}>
                 <Card>
                   <CardBody>
                     A small web app to prototype the use of APIs.
                     <br />
                     APIs used:
-                    <List type="unstyled" style={{ textAlign: 'start' }}>
+                    <List
+                      style={{
+                        textAlign: "start",
+                        width: "50%",
+                        margin: "auto",
+                      }}
+                    >
                       <li>
                         <a
                           target="blank"
@@ -66,6 +72,16 @@ const Main = () => {
                         (optical character recognition)
                       </li>
                     </List>
+                    <br />
+                    View the source code for this project:
+                    <h2>
+                      <a
+                        target="blank"
+                        href="https://github.com/jacobgrieninger/mis480-api-project"
+                      >
+                        <i class="bi bi-github"></i>
+                      </a>
+                    </h2>
                   </CardBody>
                 </Card>
               </Collapse>
@@ -83,7 +99,7 @@ const Main = () => {
 };
 
 const ImageSelection = (props) => {
-  const [search, setSearch] = useState({ go: false, term: '' });
+  const [search, setSearch] = useState({ go: false, term: "" });
   const [results, setResults] = useState([]);
   const [alert, setAlert] = useState(false);
 
@@ -98,6 +114,7 @@ const ImageSelection = (props) => {
         }
       }
       loadImgs();
+      // eslint-disable-next-line
     }, [search]);
 
     let imgList = [];
@@ -113,7 +130,7 @@ const ImageSelection = (props) => {
               onClick={function () {
                 props.setImgURL(res.urls.small);
                 setResults([]);
-                setSearch({ ...search, term: '' });
+                setSearch({ ...search, term: "" });
                 setAlert(true);
               }}
             />
@@ -130,7 +147,7 @@ const ImageSelection = (props) => {
   };
 
   return (
-    <Container className="segment" fluid="sm" style={{ textAlign: 'center' }}>
+    <Container className="segment" fluid="sm" style={{ textAlign: "center" }}>
       <h5>Select Image Source</h5>
       <Row>
         <Col />
@@ -178,7 +195,7 @@ const ImageSelection = (props) => {
       <Row>
         <Col />
         <Col
-          className={` ${alert ? 'alert-shown' : 'alert-hidden'}`}
+          className={` ${alert ? "alert-shown" : "alert-hidden"}`}
           onTransitionEnd={() => setAlert(false)}
         >
           <Alert color="success">Image Selected!</Alert>
@@ -192,22 +209,22 @@ const ImageSelection = (props) => {
 };
 
 const DisplayOCR = (props) => {
-  const [parse, setParse] = useState('');
-  const [displayType, setDisplayType] = useState('none');
+  const [parse, setParse] = useState("");
+  const [displayType, setDisplayType] = useState("none");
 
   const OutputResult = () => {
     let payload = <Fragment />;
-    if (displayType === 'none') {
+    if (displayType === "none") {
       return;
-    } else if (displayType === 'loading') {
+    } else if (displayType === "loading") {
       payload = <Spinner />;
-    } else if (displayType === 'error') {
+    } else if (displayType === "error") {
       payload = (
-        <Alert color="danger" style={{ textAlign: 'start' }}>
+        <Alert color="danger" style={{ textAlign: "start" }}>
           {parse}
         </Alert>
       );
-    } else if (displayType === 'valid') {
+    } else if (displayType === "valid") {
       payload = (
         <Card className="shadow rounded">
           <CardBody>{parse}</CardBody>
@@ -219,8 +236,8 @@ const DisplayOCR = (props) => {
   };
 
   const DefaultImage = () => {
-    let payload = '';
-    if (props.imgURL === '') {
+    let payload = "";
+    if (props.imgURL === "") {
       payload = (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -235,14 +252,20 @@ const DisplayOCR = (props) => {
         </svg>
       );
     } else {
-      payload = <img className="shadow rounded thumb" src={props.imgURL} />;
+      payload = (
+        <img
+          className="shadow rounded thumb"
+          src={props.imgURL}
+          alt="Selected"
+        />
+      );
     }
     return payload;
   };
 
   return (
     <Fragment>
-      <Container className="segment-reverse" style={{ textAlign: 'center' }}>
+      <Container className="segment-reverse" style={{ textAlign: "center" }}>
         <Row>
           <Col />
           <Col>
@@ -250,26 +273,26 @@ const DisplayOCR = (props) => {
               color="success"
               outline={true}
               onClick={async function () {
-                setDisplayType('loading');
+                setDisplayType("loading");
                 let res = await OCR(props.imgURL);
                 console.log(res);
-                if (res.hasOwnProperty('ErrorMessage')) {
-                  let payload = '';
+                if (res.hasOwnProperty("ErrorMessage")) {
+                  let payload = "";
                   res.ErrorMessage.forEach((message) => {
-                    payload += '- ' + message + '\n';
+                    payload += "- " + message + "\n";
                   });
                   setParse(payload);
-                  setDisplayType('error');
-                } else if (res.hasOwnProperty('ParsedResults')) {
-                  if (res.ParsedResults[0].ParsedText === '') {
-                    setParse('Empty result, likely unable to read image.');
-                    setDisplayType('error');
+                  setDisplayType("error");
+                } else if (res.hasOwnProperty("ParsedResults")) {
+                  if (res.ParsedResults[0].ParsedText === "") {
+                    setParse("Empty result, likely unable to read image.");
+                    setDisplayType("error");
                   } else {
                     setParse(res.ParsedResults[0].ParsedText);
-                    setDisplayType('valid');
+                    setDisplayType("valid");
                   }
                 } else {
-                  setParse('Result has neither a valid response nor error.');
+                  setParse("Result has neither a valid response nor error.");
                 }
               }}
             >
@@ -295,5 +318,5 @@ const DisplayOCR = (props) => {
   );
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Main />);
